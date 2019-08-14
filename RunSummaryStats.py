@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from FilesToAnalyze import ATS_path
 from FilesToAnalyze import dls_to_analyze_dict
+from datetime import datetime
+from zhou_utils import view_utils as view
 from tabulate import tabulate
 
 # TODO: Print out all different dtypes in a column.
@@ -9,9 +11,7 @@ from tabulate import tabulate
 # TODO: include date time of analysis
 
 #display options
-pd.options.display.float_format = '{:.0f}'.format
-pd.set_option('display.width', 1000)
-pd.set_option('display.max_columns', 50)
+view.display_options()
 
 # Parameters:
 # -must be csv
@@ -36,6 +36,7 @@ df = pd.read_csv(filepath + filename, header=header)
 
 # snapshot: first 5 rows
 print(f"{filename} Snapshot")
+print(datetime.now())
 print("Dimensions: " + str(df.shape))
 FitToWord(df)
 print("\n")
@@ -47,41 +48,45 @@ print("\n")
 # types as raw download
 dtype_df = df.dtypes.to_frame().T
 
-# types after soft inference
-inferred_df = df.infer_objects().dtypes.to_frame().T
-
 # summary stats
 sum_df = df.sum(axis=0, numeric_only=True).to_frame().T
 mean_df = df.mean(axis=0, numeric_only=True).to_frame().T
 
-summary_frames = [dtype_df, inferred_df, sum_df, mean_df]
+summary_frames = [dtype_df, sum_df, mean_df]
 
 col_summary_df = (pd.concat(summary_frames, axis=0, join='outer', sort=False, ignore_index=True)
                     .rename(index={0: 'DType',
-                                   1: 'Inferred Type',
-                                   2: 'Sum',
-                                   3: 'Mean'})
+                                   1: 'Sum',
+                                   2: 'Mean'})
                  )
 
-# already sorted from highest to lowest
+# create dictionary of column to frequency
+# value_counts() already sorted from highest to lowest
+df.fillna('NaN', inplace=True)
 hist_col_vals = {col: df[col].value_counts() for col in df}
 
+# create dictionary of column names to all their values
 all_col_vals = {col: {*df[col]} for col in df}
-# TODO: print all col vals to see all headers
+
+# print all column names
+print('\n')
+for key in all_col_vals.keys():
+    print(key)
+print('\n')
+
 for keys,vals in hist_col_vals.items():
     print(f"~* {keys} *~")
     print("# of Returned Values: " + str(vals.count()))
-    # TODO: next line is not accurate
-    # print("Any NAs?: " + str(vals.isna().any()))
+    vals_nan = 'NaN' in vals.index
+    print("Any NAs?: " + str(vals_nan))
     try:
         if vals.count() < 10:
             print("All Returned Values:")
             print(tabulate(vals.to_frame(),headers=('Value','Freq'),tablefmt='psql'))
         else:
-            print("Most Frequent:")
+            print("Sample of Most Frequent:")
             print(tabulate(vals[0:5].reset_index(),headers=('Value','Freq'),tablefmt='psql',showindex=False))
-            print("Least Frequent:")
-            # TODO: what if there are many 1 frequency values
+            print("Sample of Least Frequent:")
             print(tabulate(vals[-5:].reset_index(),headers=('Value','Freq'),tablefmt='psql',showindex=False))
     except:
         print("Unknown Exception occurred.")
