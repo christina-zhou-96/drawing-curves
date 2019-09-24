@@ -6,13 +6,51 @@ root = tk.Tk()
 canvas = tk.Canvas(root, width=300, height=200, bg='black')
 canvas.pack(fill="both", expand=True)
 
-# when you click on the half circle, it becomes bold
-half_circle = canvas.create_arc(100, 0, 200, 100, start=0, extent=-180, outline="white", style="arc")
+# direction will be dynamic later
+direction='RIGHT'
+
+# motion will be dynamic later
+motion='FULLMOON'
+
+# each bounding box is 100 x 100
+# coordinates are (x,y) of upper left corner, and then (x,y) of lower left corner
+
+coords = (100, 50, 200, 150)
+
+arc_one = canvas.create_arc(coords, start=0, extent=90, outline="white", style="arc")
+
+arc_two = canvas.create_arc(coords, start=90, extent=90, outline="white", style="arc")
+
+arc_three = canvas.create_arc(coords, start=180, extent=90, outline="white", style="arc")
+
+arc_four = canvas.create_arc(coords, start=270, extent=90, outline="white", style="arc")
+
+# second bounding box to the right
+coords_2 = (100 + 100, 50, 200 + 100, 150)
+
+arc_five = canvas.create_arc(coords_2, start=0, extent=90, outline="white", style="arc")
+
+arc_six = canvas.create_arc(coords_2, start=90, extent=90, outline="white", style="arc")
+
+arc_seven = canvas.create_arc(coords_2, start=180, extent=90, outline="white", style="arc")
+
+arc_eight = canvas.create_arc(coords_2, start=270, extent=90, outline="white", style="arc")
+
 
 def bold(event):
-    canvas.itemconfigure(half_circle,width=2.5)
+    id = event.widget.find_closest(event.x,event.y)[0]
+    canvas.itemconfigure(id,width=2.5)
 
-canvas.tag_bind(half_circle,"<Button-1>", bold)
+canvas.tag_bind(arc_one,"<Button-1>", bold)
+canvas.tag_bind(arc_two,"<Button-1>", bold)
+canvas.tag_bind(arc_three,"<Button-1>", bold)
+canvas.tag_bind(arc_four,"<Button-1>", bold)
+
+canvas.tag_bind(arc_five,"<Button-1>", bold)
+canvas.tag_bind(arc_six,"<Button-1>", bold)
+canvas.tag_bind(arc_seven,"<Button-1>", bold)
+canvas.tag_bind(arc_eight,"<Button-1>", bold)
+
 
 root.mainloop()
 
