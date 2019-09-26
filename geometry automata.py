@@ -3,7 +3,7 @@ import time
 import numpy
 
 root = tk.Tk()
-canvas = tk.Canvas(root, width=300, height=200, bg='black')
+canvas = tk.Canvas(root, width=500, height=200, bg='black')
 canvas.pack(fill="both", expand=True)
 
 # direction will be dynamic later
@@ -19,8 +19,10 @@ def bold(event):
     id = event.widget.find_closest(event.x,event.y)[0]
     # retrieve arc tag
     tag = canvas.gettags(id)[1]
+    print(tag)
+    print(type(tag))
     # bold arc
-    canvas.itemconfigure(id,width=3)
+    canvas.itemconfigure(id,width=5)
     # redraw canvas
     canvas.update()
     # give time to make each drawing piecemeal
@@ -29,8 +31,8 @@ def bold(event):
     # directional logic
     if direction == 'RIGHT':
         if motion == 'FULLMOON':
-            set_a = [1,2]
-            set_b = [3,4]
+            set_a = ['1','2']   # tags are in type string, so we match the type
+            set_b = ['3','4']
             current_set = []
 
             if tag in set_a:
@@ -40,24 +42,29 @@ def bold(event):
 
             # find within the next enclosed box in the right, the arc with a tag that fits the direction
             # when there are no more arcs to the right
-
+            current_coords = numpy.array(canvas.coords(id))
+            next_coords_additive = numpy.array([arc_width,0,arc_width,0])
+            next_coords = current_coords + next_coords_additive
+            # next_ids = event.widget.find_enclosed(100,100,200,200)
+            next_ids = event.widget.find_enclosed(*next_coords)
             # next arc
-            next_id = event.widget.find_closest(event.x + arc_width, event.y)[0]
-            # next arc tag
-            next_tag = canvas.gettags(next_id)[1]
-
-            while ((id != next_id) & (next_tag in current_set)):
-                # move cursor to the right
-                event.x += arc_width
-                # next arc
-                next_id = event.widget.find_closest(event.x + arc_width, event.y)[0]
-                # next arc tag
-                next_tag = canvas.gettags(next_id)[1]
-                # bold the new arc
-                canvas.itemconfigure(next_id, width=3)
-                canvas.update()
-                time.sleep(.5)
-
+            # next_id = event.widget.find_closest(event.x + arc_width, event.y)[0]
+            # next arc tags
+            next_tags = [canvas.gettags(next_id)[1] for next_id in next_ids]
+            for next_id,next_tag in zip(next_ids,next_tags):
+                while ((id != next_id) & (next_tag in current_set)):
+                    # move cursor to the right
+                    event.x += arc_width
+                    # bold the new arc
+                    canvas.itemconfigure(next_id, width=5)
+                    canvas.update()
+                    time.sleep(.5)
+                    # update current arc
+                    id = event.widget.find_closest(event.x, event.y)[0]
+                    # update next arc
+                    next_id = event.widget.find_closest(event.x + arc_width, event.y)[0]
+                    # update next arc tag
+                    next_tag = canvas.gettags(next_id)[1]
 
 # each bounding box is 100 x 100
 class Box():
