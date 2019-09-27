@@ -1,0 +1,6 @@
+# ignore everything...
+*
+
+# But not these files...
+!.gitignore
+!.geometry automata.py
