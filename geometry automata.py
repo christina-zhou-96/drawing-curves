@@ -3,7 +3,7 @@ import time
 import numpy
 
 root = tk.Tk()
-canvas = tk.Canvas(root, width=500, height=200, bg='black')
+canvas = tk.Canvas(root, width=500, height=500, bg='black')
 canvas.pack(fill="both", expand=True)
 
 # direction will be dynamic later
@@ -19,8 +19,6 @@ def bold(event):
     id = event.widget.find_closest(event.x,event.y)[0]
     # retrieve arc tag
     tag = canvas.gettags(id)[1]
-    print(tag)
-    print(type(tag))
     # bold arc
     canvas.itemconfigure(id,width=5)
     # redraw canvas
@@ -45,12 +43,25 @@ def bold(event):
             else:
                 current_set = set_b
 
+            # TODO: Sometimes takes an arc that shouldn't be within the bounding box, but can't consistently
+            #  replicate this. find out way and fix
+            # possibly when you double click?
 
-            if tag == '2':
+            # when there are no more arcs to the right
+            while (id != event.widget.find_closest(event.x + arc_width, event.y)[0]):
                 # set up variables to find next coordinates
                 current_box_coords = numpy.array(canvas.coords(id))
-                arc_2_normalizer = numpy.array([0,0,-arc_width,-arc_width]) # box is too big, we just want the arc box
-                current_arc_coords = current_box_coords + arc_2_normalizer
+                # box is too big, we just want the arc box
+                normalizer = 0
+                if tag == '1': # take upper right of box
+                    normalizer = numpy.array([arc_width,0,0,-arc_width])
+                if tag == '2': # take upper left of box
+                    normalizer = numpy.array([0,0,-arc_width,-arc_width])
+                if tag == '3': # take lower left of box
+                    normalizer = numpy.array([0,arc_width,-arc_width,0])
+                if tag == '4': # take lower right of box
+                    normalizer = numpy.array([arc_width,arc_width,0,0])
+                current_arc_coords = current_box_coords + normalizer
                 next_coords_additive = numpy.array([arc_width,0,arc_width,0])
                 # tkinter's find_enclosed method will exclude any objects it finds right at the perimeter, so make the perimeter slightly larger
                 boundaries_additive = numpy.array([-1,-1,1,1])
@@ -73,10 +84,8 @@ def bold(event):
                         time.sleep(.5)
                         # update current arc
                         id = event.widget.find_closest(event.x, event.y)[0]
-                        # update next arc
-                        next_id = event.widget.find_closest(event.x + arc_width, event.y)[0]
-                        # update next arc tag
-                        next_tag = canvas.gettags(next_id)[1]
+                        # update current tag
+                        tag = canvas.gettags(id)[1]
 
 # each bounding box is 100 x 100
 class Box():
@@ -119,7 +128,7 @@ grid_indice = box_width/2
 arc_width = box_width/2
 
 # make desired size of grid (width, height)
-size=[6,4]
+size=[6*2,4*2]
 
 for i in range(size[1]):
     # keep adding 1 grid indice to the y as you move down
