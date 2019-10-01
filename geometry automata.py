@@ -7,7 +7,7 @@ cream = '#fafaeb'
 umber = '#21201f'
 
 root = tk.Tk()
-canvas = tk.Canvas(root, width=500, height=500, bg=umber)
+canvas = tk.Canvas(root, width=650, height=450, bg=umber)
 canvas.pack(fill="both", expand=True)
 
 # TODO: freezes when trying to click again sometimes
@@ -90,10 +90,16 @@ def bold(event):
             directional_additive = numpy.array([0,-arc_width])
         if direction == 'DOWN':
             directional_additive = numpy.array([0,arc_width])
-
-        test = numpy.array([event.x, event.y])
+        last_event_x = 0
+        # TODO: buggy while. figure out previous id while loop?
         # when there are no more arcs to the desired direction
-        while id != event.widget.find_closest(*(numpy.array([event.x, event.y]) + directional_additive))[0]:
+        while (event.x + arc_width < canvas.winfo_width() - arc_width) and (event.y + arc_width <
+                                                                        canvas.winfo_height() - arc_width) and (event.x > arc_width) and (event.y > arc_width):
+            print('in while')
+            print('x is ' + str(event.x))
+            print('x bound is ' + str(canvas.winfo_width() - arc_width))
+            print('y is ' + str(event.y))
+            print('y bound is ' + str(canvas.winfo_height() - arc_width))
             # set up variables to find next coordinates
             current_box_coords = numpy.array(canvas.coords(id))
             # box is too big, we just want the arc box
@@ -127,6 +133,9 @@ def bold(event):
 
             # obtain list of the next tags
             next_tags = [canvas.gettags(next_id)[1] for next_id in next_ids]
+
+            last_event_x = event.x
+            prev_id = id
 
             for next_id,next_tag in zip(next_ids,next_tags):
                 if ((id != next_id) & (next_tag in current_set)):
@@ -193,9 +202,6 @@ arc_width = box_width/2
 size=[6*2,4*2]
 
 for i in range(size[1]):
-    # keep adding 1 grid indice to the y as you move down
-    coords = coords + numpy.array([0, 0 + grid_indice, 0, 0 + grid_indice])
-
     for j in range(size[0]):
         # keep adding 1 grid indice to the x as you move to the right
         box_coords = coords + numpy.array([0 + grid_indice*j, 0, 0 + grid_indice*j, 0])
@@ -213,6 +219,8 @@ for i in range(size[1]):
         elif odd_row & odd_column:
             Box(tuple(box_coords))
 
+    # keep adding 1 grid indice to the y as you move down
+    coords = coords + numpy.array([0, 0 + grid_indice, 0, 0 + grid_indice])
 
 root.mainloop()
 
