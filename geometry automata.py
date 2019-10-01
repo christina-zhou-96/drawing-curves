@@ -2,17 +2,25 @@ import tkinter as tk
 import time
 import numpy
 
+# set hex colors
+cream = '#fafaeb'
+umber = '#21201f'
+
 root = tk.Tk()
-canvas = tk.Canvas(root, width=500, height=500, bg='black')
+canvas = tk.Canvas(root, width=500, height=500, bg=umber)
 canvas.pack(fill="both", expand=True)
 
 # TODO: freezes when trying to click again sometimes
 
 # direction will be dynamic later
-direction='RIGHT'
+direction='DOWN'
+# note that tkinter canvas starts with an origin in the corner, moving down therefore is *adding* y value,
+# so some of the math may look inverted
 
 # motion will be dynamic later
 motion='HALFMOON'
+
+WIDTH = 6
 
 # apply bold to line
 def bold(event):
@@ -22,7 +30,7 @@ def bold(event):
     # retrieve arc tag
     tag = canvas.gettags(id)[1]
     # bold arc
-    canvas.itemconfigure(id,width=5)
+    canvas.itemconfigure(id,width=WIDTH)
     # redraw canvas
     canvas.update()
     # give time to make each drawing piecemeal
@@ -33,9 +41,17 @@ def bold(event):
 
         # find within the next enclosed box in the right, the arc with a tag that fits the motion type so long as
         # there are no more arcs to the right
+        set_a = 0
+        set_b = 0
 
-        set_a = ['1','2']   # tags are in type string, so we match the type
-        set_b = ['3','4']
+        # sets inverse depending on vertical or horizontal direction
+        if direction == 'RIGHT' or direction == 'LEFT':
+            set_a = ['1','2']   # tags are in type string, so we match the type
+            set_b = ['3','4']
+        if direction == 'UP' or direction == 'DOWN':
+            set_a = ['1','4']   # tags are in type string, so we match the type
+            set_b = ['2','3']
+
         current_set = []
 
         # check to see what kind of curve this is
@@ -55,13 +71,13 @@ def bold(event):
         if direction == 'LEFT':
             directional_additive = numpy.array([-arc_width,0])
         if direction == 'UP':
-            directional_additive = numpy.array([0,arc_width])
-        if direction == 'DOWN':
             directional_additive = numpy.array([0,-arc_width])
+        if direction == 'DOWN':
+            directional_additive = numpy.array([0,arc_width])
 
         test = numpy.array([event.x, event.y])
         # when there are no more arcs to the desired direction
-        while id != event.widget.find_closest(numpy.array([event.x, event.y]) + directional_additive)[0]:
+        while id != event.widget.find_closest(*(numpy.array([event.x, event.y]) + directional_additive))[0]:
             # set up variables to find next coordinates
             current_box_coords = numpy.array(canvas.coords(id))
             # box is too big, we just want the arc box
@@ -82,9 +98,9 @@ def bold(event):
             if direction == 'LEFT':
                 next_coords_additive = numpy.array([-arc_width,0,-arc_width,0])
             if direction == 'UP':
-                next_coords_additive = numpy.array([0,arc_width,0,arc_width])
-            if direction == 'DOWN':
                 next_coords_additive = numpy.array([0,-arc_width,0,-arc_width])
+            if direction == 'DOWN':
+                next_coords_additive = numpy.array([0,arc_width,0,arc_width])
             # tkinter's find_enclosed method will exclude any objects it finds right at the perimeter, so make the perimeter slightly larger
             boundaries_additive = numpy.array([-1,-1,1,1])
             # obtain the next coordinates
@@ -104,12 +120,12 @@ def bold(event):
                     if direction == 'LEFT':
                         event.x -= arc_width
                     if direction == 'UP':
-                        event.y += arc_width
-                    if direction == 'DOWN':
                         event.y -= arc_width
+                    if direction == 'DOWN':
+                        event.y += arc_width
 
                     # bold the new arc
-                    canvas.itemconfigure(next_id, width=5)
+                    canvas.itemconfigure(next_id, width=WIDTH)
                     canvas.update()
                     time.sleep(.5)
                     # update current arc
@@ -126,13 +142,13 @@ class Box():
         # make each arc
         self.arcs = [
             # arc 1
-            canvas.create_arc(coords, start=0, extent=90, outline="white", style="arc", tag=(self.tag, 1)),
+            canvas.create_arc(coords, start=0, extent=90, outline=cream, style="arc", tag=(self.tag, 1)),
             # arc 2
-            canvas.create_arc(coords, start=90, extent=90, outline="white", style="arc", tag=(self.tag, 2)),
+            canvas.create_arc(coords, start=90, extent=90, outline=cream, style="arc", tag=(self.tag, 2)),
             # arc 3
-            canvas.create_arc(coords, start=180, extent=90, outline="white", style="arc", tag=(self.tag, 3)),
+            canvas.create_arc(coords, start=180, extent=90, outline=cream, style="arc", tag=(self.tag, 3)),
             # arc 4
-            canvas.create_arc(coords, start=270, extent=90, outline="white", style="arc", tag=(self.tag, 4))
+            canvas.create_arc(coords, start=270, extent=90, outline=cream, style="arc", tag=(self.tag, 4))
         ]
 
         # allow each arc to be bolded
