@@ -31,28 +31,38 @@ def bold(event):
     # directional logic
     if direction == 'RIGHT':
         if motion == 'FULLMOON':
+
+            # find within the next enclosed box in the right, the arc with a tag that fits the motion type so long as
+            # there are no more arcs to the right
+
             set_a = ['1','2']   # tags are in type string, so we match the type
             set_b = ['3','4']
             current_set = []
 
+            # check to see what kind of curve this is
             if tag in set_a:
                 current_set = set_a
             else:
                 current_set = set_b
 
-            # find within the next enclosed box in the right, the arc with a tag that fits the direction
-            # when there are no more arcs to the right
-            current_coords = numpy.array(canvas.coords(id))
-            next_coords_additive = numpy.array([arc_width,0,arc_width,0])
-            # tkinter's find_enclosed method will exclude any objects it finds right at the perimeter, so make the perimeter slightly larger
-            boundaries_additive = numpy.array([-1,-1,1,1])
-            next_coords = current_coords + next_coords_additive + boundaries_additive
-            # next_ids = event.widget.find_enclosed(100,100,200,200)
+
+            if tag == '2':
+                # set up variables to find next coordinates
+                current_box_coords = numpy.array(canvas.coords(id))
+                arc_2_normalizer = numpy.array([0,0,-arc_width,-arc_width]) # box is too big, we just want the arc box
+                current_arc_coords = current_box_coords + arc_2_normalizer
+                next_coords_additive = numpy.array([arc_width,0,0,arc_width])
+                # tkinter's find_enclosed method will exclude any objects it finds right at the perimeter, so make the perimeter slightly larger
+                boundaries_additive = numpy.array([-1,-1,1,1])
+                # obtain the next coordinates
+                next_coords = current_arc_coords + next_coords_additive + boundaries_additive
+
+            # obtain list of the next IDs
             next_ids = event.widget.find_enclosed(*next_coords)
-            # next arc
-            # next_id = event.widget.find_closest(event.x + arc_width, event.y)[0]
-            # next arc tags
+
+            # obtain list of the next tags
             next_tags = [canvas.gettags(next_id)[1] for next_id in next_ids]
+
             for next_id,next_tag in zip(next_ids,next_tags):
                 while ((id != next_id) & (next_tag in current_set)):
                     # move cursor to the right
