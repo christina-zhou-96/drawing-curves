@@ -12,15 +12,31 @@ canvas.pack(fill="both", expand=True)
 
 # TODO: freezes when trying to click again sometimes
 
-# direction will be dynamic later
 direction='DOWN'
 # note that tkinter canvas starts with an origin in the corner, moving down therefore is *adding* y value,
 # so some of the math may look inverted
+
+# change direction
+def apply_direction(event):
+    global direction
+    if event.char == 'u':
+        direction = 'UP'
+    if event.char == 'd':
+        direction = 'DOWN'
+    if event.char == 'r':
+        direction = 'RIGHT'
+    if event.char == 'l':
+        direction = 'LEFT'
+
+print(direction)
+root.bind("<Key>", apply_direction)
 
 # motion will be dynamic later
 motion='HALFMOON'
 
 WIDTH = 6
+
+
 
 # apply bold to line
 def bold(event):
