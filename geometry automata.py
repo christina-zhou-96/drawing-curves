@@ -6,11 +6,13 @@ root = tk.Tk()
 canvas = tk.Canvas(root, width=500, height=500, bg='black')
 canvas.pack(fill="both", expand=True)
 
+# TODO: freezes when trying to click again sometimes
+
 # direction will be dynamic later
 direction='RIGHT'
 
 # motion will be dynamic later
-motion='FULLMOON'
+motion='HALFMOON'
 
 # apply bold to line
 def bold(event):
@@ -26,66 +28,94 @@ def bold(event):
     # give time to make each drawing piecemeal
     time.sleep(.5)
 
-    # directional logic
-    if direction == 'RIGHT':
-        if motion == 'FULLMOON':
+    # motion logic
+    if motion == 'HALFMOON':
 
-            # find within the next enclosed box in the right, the arc with a tag that fits the motion type so long as
-            # there are no more arcs to the right
+        # find within the next enclosed box in the right, the arc with a tag that fits the motion type so long as
+        # there are no more arcs to the right
 
-            set_a = ['1','2']   # tags are in type string, so we match the type
-            set_b = ['3','4']
-            current_set = []
+        set_a = ['1','2']   # tags are in type string, so we match the type
+        set_b = ['3','4']
+        current_set = []
 
-            # check to see what kind of curve this is
-            if tag in set_a:
-                current_set = set_a
-            else:
-                current_set = set_b
+        # check to see what kind of curve this is
+        if tag in set_a:
+            current_set = set_a
+        else:
+            current_set = set_b
 
-            # TODO: Sometimes takes an arc that shouldn't be within the bounding box, but can't consistently
-            #  replicate this. find out way and fix
-            # possibly when you double click?
+        # TODO: Sometimes takes an arc that shouldn't be within the bounding box, but can't consistently
+        #  replicate this. find out way and fix
+        # possibly when you double click?
 
-            # when there are no more arcs to the right
-            while (id != event.widget.find_closest(event.x + arc_width, event.y)[0]):
-                # set up variables to find next coordinates
-                current_box_coords = numpy.array(canvas.coords(id))
-                # box is too big, we just want the arc box
-                normalizer = 0
-                if tag == '1': # take upper right of box
-                    normalizer = numpy.array([arc_width,0,0,-arc_width])
-                if tag == '2': # take upper left of box
-                    normalizer = numpy.array([0,0,-arc_width,-arc_width])
-                if tag == '3': # take lower left of box
-                    normalizer = numpy.array([0,arc_width,-arc_width,0])
-                if tag == '4': # take lower right of box
-                    normalizer = numpy.array([arc_width,arc_width,0,0])
-                current_arc_coords = current_box_coords + normalizer
+        # direction logic
+        directional_additive = 0
+        if direction == 'RIGHT':
+            directional_additive = numpy.array([arc_width,0])
+        if direction == 'LEFT':
+            directional_additive = numpy.array([-arc_width,0])
+        if direction == 'UP':
+            directional_additive = numpy.array([0,arc_width])
+        if direction == 'DOWN':
+            directional_additive = numpy.array([0,-arc_width])
+
+        test = numpy.array([event.x, event.y])
+        # when there are no more arcs to the desired direction
+        while id != event.widget.find_closest(numpy.array([event.x, event.y]) + directional_additive)[0]:
+            # set up variables to find next coordinates
+            current_box_coords = numpy.array(canvas.coords(id))
+            # box is too big, we just want the arc box
+            normalizer = 0
+            if tag == '1': # take upper right of box
+                normalizer = numpy.array([arc_width,0,0,-arc_width])
+            if tag == '2': # take upper left of box
+                normalizer = numpy.array([0,0,-arc_width,-arc_width])
+            if tag == '3': # take lower left of box
+                normalizer = numpy.array([0,arc_width,-arc_width,0])
+            if tag == '4': # take lower right of box
+                normalizer = numpy.array([arc_width,arc_width,0,0])
+            current_arc_coords = current_box_coords + normalizer
+            next_coords_additive = 0
+            # directional logic
+            if direction == 'RIGHT':
                 next_coords_additive = numpy.array([arc_width,0,arc_width,0])
-                # tkinter's find_enclosed method will exclude any objects it finds right at the perimeter, so make the perimeter slightly larger
-                boundaries_additive = numpy.array([-1,-1,1,1])
-                # obtain the next coordinates
-                next_coords = current_arc_coords + next_coords_additive + boundaries_additive
+            if direction == 'LEFT':
+                next_coords_additive = numpy.array([-arc_width,0,-arc_width,0])
+            if direction == 'UP':
+                next_coords_additive = numpy.array([0,arc_width,0,arc_width])
+            if direction == 'DOWN':
+                next_coords_additive = numpy.array([0,-arc_width,0,-arc_width])
+            # tkinter's find_enclosed method will exclude any objects it finds right at the perimeter, so make the perimeter slightly larger
+            boundaries_additive = numpy.array([-1,-1,1,1])
+            # obtain the next coordinates
+            next_coords = current_arc_coords + next_coords_additive + boundaries_additive
 
-                # obtain list of the next IDs
-                next_ids = event.widget.find_enclosed(*next_coords)
+            # obtain list of the next IDs
+            next_ids = event.widget.find_enclosed(*next_coords)
 
-                # obtain list of the next tags
-                next_tags = [canvas.gettags(next_id)[1] for next_id in next_ids]
+            # obtain list of the next tags
+            next_tags = [canvas.gettags(next_id)[1] for next_id in next_ids]
 
-                for next_id,next_tag in zip(next_ids,next_tags):
-                    if ((id != next_id) & (next_tag in current_set)):
-                        # move cursor to the right
+            for next_id,next_tag in zip(next_ids,next_tags):
+                if ((id != next_id) & (next_tag in current_set)):
+                    # move cursor to the desired direction
+                    if direction == 'RIGHT':
                         event.x += arc_width
-                        # bold the new arc
-                        canvas.itemconfigure(next_id, width=5)
-                        canvas.update()
-                        time.sleep(.5)
-                        # update current arc
-                        id = event.widget.find_closest(event.x, event.y)[0]
-                        # update current tag
-                        tag = canvas.gettags(id)[1]
+                    if direction == 'LEFT':
+                        event.x -= arc_width
+                    if direction == 'UP':
+                        event.y += arc_width
+                    if direction == 'DOWN':
+                        event.y -= arc_width
+
+                    # bold the new arc
+                    canvas.itemconfigure(next_id, width=5)
+                    canvas.update()
+                    time.sleep(.5)
+                    # update current arc
+                    id = event.widget.find_closest(event.x, event.y)[0]
+                    # update current tag
+                    tag = canvas.gettags(id)[1]
 
 # each bounding box is 100 x 100
 class Box():
