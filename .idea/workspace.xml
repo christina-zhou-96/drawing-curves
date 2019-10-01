@@ -74,27 +74,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="HelloWorld" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Utilities" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/HelloWorld.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="PrintScriptToWord (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Utilities" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -158,13 +137,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Utilities" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.geometry automata" />
+        <item itemvalue="Python.test" />
         <item itemvalue="Python.Regents RR QC" />
         <item itemvalue="Python.GT_Retention" />
         <item itemvalue="Python.PrintScriptToWord (1)" />
-        <item itemvalue="Python.HelloWorld" />
       </list>
     </recent_temporary>
   </component>
@@ -643,53 +643,48 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/geometry automata.py</url>
-          <line>50</line>
-          <option name="timeStamp" value="108" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/geometry automata.py</url>
-          <line>51</line>
-          <option name="timeStamp" value="109" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/geometry automata.py</url>
-          <line>54</line>
+          <line>56</line>
           <option name="timeStamp" value="110" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/geometry automata.py</url>
-          <line>62</line>
+          <line>64</line>
           <option name="timeStamp" value="111" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/geometry automata.py</url>
-          <line>64</line>
+          <line>66</line>
           <option name="timeStamp" value="112" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/geometry automata.py</url>
-          <line>66</line>
+          <line>68</line>
           <option name="timeStamp" value="113" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/geometry automata.py</url>
-          <line>48</line>
-          <option name="timeStamp" value="114" />
+          <line>58</line>
+          <option name="timeStamp" value="128" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test.py</url>
+          <line>2</line>
+          <option name="timeStamp" value="129" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test.py</url>
+          <line>1</line>
+          <option name="timeStamp" value="130" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/geometry automata.py</url>
-          <line>45</line>
-          <option name="timeStamp" value="115" />
+          <line>55</line>
+          <option name="timeStamp" value="131" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/geometry automata.py</url>
-          <line>52</line>
-          <option name="timeStamp" value="118" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/geometry automata.py</url>
-          <line>46</line>
-          <option name="timeStamp" value="120" />
+          <line>60</line>
+          <option name="timeStamp" value="132" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -702,14 +697,10 @@
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="cumul_RRs['Mode by Position']" />
-        <watch expression="cumul_RRs['Mode by Position - Site']" />
-        <watch expression="cumul_RRs['Mode by Earliest Close - Position']" />
-        <watch expression="rrPivots['Mode by Position']" />
-        <watch expression="rrPivots['Mode by Position - Site']" />
-        <watch expression="rrPivots['Mode by Earliest Close - Position']" />
-        <watch expression="coords" />
-        <watch expression="box_coords" />
+        <watch expression="id" />
+        <watch expression="next_id" />
+        <watch expression="next_tag" />
+        <watch expression="event" />
       </configuration>
     </watches-manager>
   </component>

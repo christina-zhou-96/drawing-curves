@@ -44,7 +44,9 @@ def bold(event):
             # when there are no more arcs to the right
             current_coords = numpy.array(canvas.coords(id))
             next_coords_additive = numpy.array([arc_width,0,arc_width,0])
-            next_coords = current_coords + next_coords_additive
+            # tkinter's find_enclosed method will exclude any objects it finds right at the perimeter, so make the perimeter slightly larger
+            boundaries_additive = numpy.array([-1,-1,1,1])
+            next_coords = current_coords + next_coords_additive + boundaries_additive
             # next_ids = event.widget.find_enclosed(100,100,200,200)
             next_ids = event.widget.find_enclosed(*next_coords)
             # next arc
