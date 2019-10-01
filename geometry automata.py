@@ -16,9 +16,12 @@ direction='DOWN'
 # note that tkinter canvas starts with an origin in the corner, moving down therefore is *adding* y value,
 # so some of the math may look inverted
 
-# change direction
-def apply_direction(event):
+motion='HALFMOON'
+
+# change direction or motion
+def apply_directives(event):
     global direction
+    global motion
     if event.char == 'u':
         direction = 'UP'
     if event.char == 'd':
@@ -28,11 +31,12 @@ def apply_direction(event):
     if event.char == 'l':
         direction = 'LEFT'
 
-print(direction)
-root.bind("<Key>", apply_direction)
+    if event.char == 'c': # stands for 'click'
+        motion = 'CLICK'
 
-# motion will be dynamic later
-motion='HALFMOON'
+root.bind("<Key>", apply_directives)
+
+
 
 WIDTH = 6
 
@@ -52,7 +56,6 @@ def bold(event):
     # give time to make each drawing piecemeal
     time.sleep(.5)
 
-    # motion logic
     if motion == 'HALFMOON':
 
         # find within the next enclosed box in the right, the arc with a tag that fits the motion type so long as
@@ -90,11 +93,10 @@ def bold(event):
             directional_additive = numpy.array([0,-arc_width])
         if direction == 'DOWN':
             directional_additive = numpy.array([0,arc_width])
-        last_event_x = 0
+        prev_id = 0
         # TODO: buggy while. figure out previous id while loop?
         # when there are no more arcs to the desired direction
-        while (event.x + arc_width < canvas.winfo_width() - arc_width) and (event.y + arc_width <
-                                                                        canvas.winfo_height() - arc_width) and (event.x > arc_width) and (event.y > arc_width):
+        while (id != prev_id):
             print('in while')
             print('x is ' + str(event.x))
             print('x bound is ' + str(canvas.winfo_width() - arc_width))
