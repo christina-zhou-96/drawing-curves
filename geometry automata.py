@@ -51,32 +51,32 @@ def bold(event):
                 current_box_coords = numpy.array(canvas.coords(id))
                 arc_2_normalizer = numpy.array([0,0,-arc_width,-arc_width]) # box is too big, we just want the arc box
                 current_arc_coords = current_box_coords + arc_2_normalizer
-                next_coords_additive = numpy.array([arc_width,0,0,arc_width])
+                next_coords_additive = numpy.array([arc_width,0,arc_width,0])
                 # tkinter's find_enclosed method will exclude any objects it finds right at the perimeter, so make the perimeter slightly larger
                 boundaries_additive = numpy.array([-1,-1,1,1])
                 # obtain the next coordinates
                 next_coords = current_arc_coords + next_coords_additive + boundaries_additive
 
-            # obtain list of the next IDs
-            next_ids = event.widget.find_enclosed(*next_coords)
+                # obtain list of the next IDs
+                next_ids = event.widget.find_enclosed(*next_coords)
 
-            # obtain list of the next tags
-            next_tags = [canvas.gettags(next_id)[1] for next_id in next_ids]
+                # obtain list of the next tags
+                next_tags = [canvas.gettags(next_id)[1] for next_id in next_ids]
 
-            for next_id,next_tag in zip(next_ids,next_tags):
-                while ((id != next_id) & (next_tag in current_set)):
-                    # move cursor to the right
-                    event.x += arc_width
-                    # bold the new arc
-                    canvas.itemconfigure(next_id, width=5)
-                    canvas.update()
-                    time.sleep(.5)
-                    # update current arc
-                    id = event.widget.find_closest(event.x, event.y)[0]
-                    # update next arc
-                    next_id = event.widget.find_closest(event.x + arc_width, event.y)[0]
-                    # update next arc tag
-                    next_tag = canvas.gettags(next_id)[1]
+                for next_id,next_tag in zip(next_ids,next_tags):
+                    if ((id != next_id) & (next_tag in current_set)):
+                        # move cursor to the right
+                        event.x += arc_width
+                        # bold the new arc
+                        canvas.itemconfigure(next_id, width=5)
+                        canvas.update()
+                        time.sleep(.5)
+                        # update current arc
+                        id = event.widget.find_closest(event.x, event.y)[0]
+                        # update next arc
+                        next_id = event.widget.find_closest(event.x + arc_width, event.y)[0]
+                        # update next arc tag
+                        next_tag = canvas.gettags(next_id)[1]
 
 # each bounding box is 100 x 100
 class Box():
