@@ -50,4 +50,6 @@ Inspirations
 ------------
 2D cellular automata in A New Kind of Science by Stephen Wolfram
 
+Game of Life by John Horton Conway
+
 The Algorithmic Beauty of Seashells by Hans Meinhardt
