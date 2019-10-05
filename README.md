@@ -7,6 +7,7 @@ This accompanies a figure in the book ["Curves: Flowers, Foliates & Flourishes"]
 
 Currently allows user to create a pattern off a geometric grid, in this case four petaled. User selects a direction and the pattern will propagate in the same direction until there is no more canvas
 
+![ll](geometry automata demo.gif)
 
 Instructions
 ------------
