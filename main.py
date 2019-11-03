@@ -3,9 +3,10 @@ import time
 import numpy
 
 # set hex colors
-cream = '#fafaeb'
-umber = '#21201f'
-
+# cream = '#fafaeb'
+cream = 'black'
+# umber = '#21201f'
+umber = 'white'
 root = tk.Tk()
 canvas = tk.Canvas(root, width=650, height=450, bg=umber)
 canvas.pack(fill="both", expand=True)
@@ -201,7 +202,7 @@ grid_indice = box_width/2
 arc_width = box_width/2
 
 # make desired size of grid (width, height)
-size=[6*2,4*2]
+size=[6*4,4*4]
 
 for i in range(size[1]):
     for j in range(size[0]):
