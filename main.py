@@ -20,18 +20,25 @@ motion='HALFMOON'
 
 # change direction or motion
 def apply_directives(event):
+    '''
+    WASD or arrow keys to trigger drawing to one direction.
+    Spacebar to trigger one by one drawing.
+    :param event: tkinter event with attributes including the event character or
+    key symbol
+    :return: None
+    '''
     global direction
     global motion
-    if event.char == 'u':
+    if event.char == 'w' or event.keysym == "Up":
         direction = 'UP'
-    if event.char == 'd':
+    if event.char == 's' or event.keysym == "Down":
         direction = 'DOWN'
-    if event.char == 'r':
+    if event.char == 'd' or event.keysym == "Right":
         direction = 'RIGHT'
-    if event.char == 'l':
+    if event.char == 'a' or event.keysym == "Left":
         direction = 'LEFT'
 
-    if event.char == 'c': # stands for 'click'
+    if event.keysym == "space":
         motion = 'CLICK'
 
 root.bind("<Key>", apply_directives)
