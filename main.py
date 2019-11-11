@@ -6,17 +6,27 @@ import numpy
 cream = '#fafaeb'
 umber = '#21201f'
 
+# set background and arc colors
+# can switch between cream/umber theme and white/black theme
+# I thought that cream/umber would be good because it matches the book,
+# but I think white/black shows on computer displays better.
+bg = "black"
+arc_color = "white"
+
+# set how wide the arc becomes when it's bolded, or activated
+# I thought 6 would be good because it's obvious, but I think 4.5 is the most
+# aesthetic width
+WIDTH = 4.5
+
+##### initialize canvas
 root = tk.Tk()
-canvas = tk.Canvas(root, width=650, height=450, bg=umber)
+canvas = tk.Canvas(root, width=650, height=450, bg=bg)
 canvas.pack(fill="both", expand=True)
 
-# TODO: freezes when trying to click again sometimes
-
-direction='DOWN'
-# note that tkinter canvas starts with an origin in the corner, moving down therefore is *adding* y value,
-# so some of the math may look inverted
-
+# initialize motion
 motion='HALFMOON'
+# initialize direction
+direction='DOWN'
 
 # change direction or motion
 def apply_directives(event):
@@ -31,27 +41,25 @@ def apply_directives(event):
     global motion
     if event.char == 'w' or event.keysym == "Up":
         direction = 'UP'
+        motion = 'HALFMOON'
     if event.char == 's' or event.keysym == "Down":
         direction = 'DOWN'
+        motion = 'HALFMOON'
     if event.char == 'd' or event.keysym == "Right":
         direction = 'RIGHT'
+        motion = 'HALFMOON'
     if event.char == 'a' or event.keysym == "Left":
         direction = 'LEFT'
+        motion = 'HALFMOON'
 
     if event.keysym == "space":
         motion = 'CLICK'
 
 root.bind("<Key>", apply_directives)
 
-
-
-WIDTH = 6
-
-
-
-# apply bold to line
+# apply bold to arc
 def bold(event):
-    # initial boldness
+    ##### initial boldness
     # find arc user meant
     id = event.widget.find_closest(event.x,event.y)[0]
     # retrieve arc tag
@@ -63,6 +71,7 @@ def bold(event):
     # give time to make each drawing piecemeal
     time.sleep(.5)
 
+    ##### propagate motion
     if motion == 'HALFMOON':
 
         # find within the next enclosed box in the right, the arc with a tag that fits the motion type so long as
@@ -88,7 +97,6 @@ def bold(event):
 
         # TODO: Sometimes takes an arc that shouldn't be within the bounding box, but can't consistently
         #  replicate this. find out way and fix
-        # possibly when you double click?
 
         # direction logic
         directional_additive = 0
@@ -101,14 +109,9 @@ def bold(event):
         if direction == 'DOWN':
             directional_additive = numpy.array([0,arc_width])
         prev_id = 0
-        # TODO: buggy while. figure out previous id while loop?
+
         # when there are no more arcs to the desired direction
         while (id != prev_id):
-            print('in while')
-            print('x is ' + str(event.x))
-            print('x bound is ' + str(canvas.winfo_width() - arc_width))
-            print('y is ' + str(event.y))
-            print('y bound is ' + str(canvas.winfo_height() - arc_width))
             # set up variables to find next coordinates
             current_box_coords = numpy.array(canvas.coords(id))
             # box is too big, we just want the arc box
@@ -167,7 +170,7 @@ def bold(event):
                     # update current tag
                     tag = canvas.gettags(id)[1]
 
-# each bounding box is 100 x 100
+
 class Box():
     def __init__(self, coords):
         # give the class a tag for tkinter to find later
@@ -176,13 +179,17 @@ class Box():
         # make each arc
         self.arcs = [
             # arc 1
-            canvas.create_arc(coords, start=0, extent=90, outline=cream, style="arc", tag=(self.tag, 1)),
+            canvas.create_arc(coords, start=0, extent=90, outline=arc_color,
+                              style="arc", tag=(self.tag, 1)),
             # arc 2
-            canvas.create_arc(coords, start=90, extent=90, outline=cream, style="arc", tag=(self.tag, 2)),
+            canvas.create_arc(coords, start=90, extent=90, outline=arc_color,
+                              style="arc", tag=(self.tag, 2)),
             # arc 3
-            canvas.create_arc(coords, start=180, extent=90, outline=cream, style="arc", tag=(self.tag, 3)),
+            canvas.create_arc(coords, start=180, extent=90, outline=arc_color,
+                              style="arc", tag=(self.tag, 3)),
             # arc 4
-            canvas.create_arc(coords, start=270, extent=90, outline=cream, style="arc", tag=(self.tag, 4))
+            canvas.create_arc(coords, start=270, extent=90, outline=arc_color,
+                              style="arc", tag=(self.tag, 4))
         ]
 
         # allow each arc to be bolded
@@ -195,8 +202,8 @@ class Box():
 
 # coordinates are (x,y) of upper left corner, and then (x,y) of lower left corner
 # use numpy array for vector addition
+# each bounding box is 100 x 100
 coords = numpy.array([0, 0, 100, 100])
-
 
 # use box width to calculate grid indice
 box_width = coords[2] - coords[0]
@@ -208,28 +215,37 @@ grid_indice = box_width/2
 arc_width = box_width/2
 
 # make desired size of grid (width, height)
-size=[6*2,4*2]
+multiplier = 4
+size=[6*multiplier,4*multiplier]
 
-for i in range(size[1]):
-    for j in range(size[0]):
-        # keep adding 1 grid indice to the x as you move to the right
-        box_coords = coords + numpy.array([0 + grid_indice*j, 0, 0 + grid_indice*j, 0])
+def init_grid(size, coords, grid_indice):
+    """
+    Create the initial grid by passing in the width and height
+    :param size: list of [width, height]
+    :return: None
+    """
+    for i in range(size[1]):
+        for j in range(size[0]):
+            # keep adding 1 grid indice to the x as you move to the right
+            box_coords = coords + numpy.array([0 + grid_indice*j, 0, 0 + grid_indice*j, 0])
 
-        # create variables to check parity
-        even_row = i%2 == 0
-        odd_row = not even_row
-        even_column = j%2 == 0
-        odd_column = not even_column
+            # create variables to check parity
+            even_row = i%2 == 0
+            odd_row = not even_row
+            even_column = j%2 == 0
+            odd_column = not even_column
 
-        # only draw a box on the same parity of i and j
-        # that is: on an odd row (i), only draw on odd column (j) values
-        if even_row & even_column:
-            Box(tuple(box_coords))
-        elif odd_row & odd_column:
-            Box(tuple(box_coords))
+            # only draw a box on the same parity of i and j
+            # that is: on an odd row (i), only draw on odd column (j) values
+            if even_row & even_column:
+                Box(tuple(box_coords))
+            elif odd_row & odd_column:
+                Box(tuple(box_coords))
 
-    # keep adding 1 grid indice to the y as you move down
-    coords = coords + numpy.array([0, 0 + grid_indice, 0, 0 + grid_indice])
+        # keep adding 1 grid indice to the y as you move down
+        coords = coords + numpy.array([0, 0 + grid_indice, 0, 0 + grid_indice])
+
+init_grid(size, coords, grid_indice)
 
 root.mainloop()
 
