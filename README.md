@@ -21,7 +21,7 @@ Click the arc you would like to start
 Wait until the arc is finished drawing, and then repeat for more patterns
 
 
-You may also select arcs by yourself with <spacebar> if you do not wish to
+You may also select arcs by yourself with spacebar if you do not wish to
 propagate any motion.
 
 

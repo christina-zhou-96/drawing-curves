@@ -29,7 +29,7 @@ WIDTH = 4.5
 
 ##### initialize canvas
 root = tk.Tk()
-canvas = tk.Canvas(root, width=650, height=450, bg=bg)
+canvas = tk.Canvas(root, width=1250, height=850, bg=bg)
 canvas.pack(fill="both", expand=True)
 
 # initialize motion
