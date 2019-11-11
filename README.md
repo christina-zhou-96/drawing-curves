@@ -13,26 +13,16 @@ Instructions
 ------------
 Run main.py
 
-Press on your keyboard the initial of the direction you want to move in
-
-u - up
-
-d - down
-
-r - right
-
-l - left
+Press on your keyboard the initial of the direction you want to move in with
+WASD or arrow keys
 
 Click the arc you would like to start
 
 Wait until the arc is finished drawing, and then repeat for more patterns
 
 
-You may also select arcs by yourself
-
-c - click
-
-if you do not wish to propagate any motion.
+You may also select arcs by yourself with <spacebar> if you do not wish to
+propagate any motion.
 
 
 Future directions
@@ -43,7 +33,7 @@ Program should include new motions such as full moon
 
 Program should include other basic units such as six petaled grid
 
-Program should allow multiple patterns to propagate once (tkinter capabilities here are limited)
+Program should allow multiple patterns to propagate once
 
 
 Inspirations
