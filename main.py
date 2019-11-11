@@ -1,3 +1,12 @@
+##### Version 1.1.0
+#
+# python 3.7
+# numpy 1.7.4
+##### ..............
+
+# TODO: reset focus to computer generated animations, antialias lines for
+#  better look, add border for better look
+
 import tkinter as tk
 import time
 import numpy
