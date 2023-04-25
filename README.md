@@ -36,7 +36,7 @@ Program should include other basic units such as six petaled grid
 Program should allow multiple patterns to propagate once
 
 
-Inspirations
+If you enjoyed this, you may also enjoy
 ------------
 2D cellular automata in A New Kind of Science by Stephen Wolfram
 
